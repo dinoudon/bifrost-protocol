@@ -9,7 +9,7 @@ import { checkHeartbeats } from './circuit-breaker.js'
 
 const dbPath = process.env.DB_PATH ?? 'TEAM_STATE.db'
 const db = initDb(dbPath)
-const server = new McpServer({ name: 'custom-protocol-mcp', version: '1.0.0' })
+const server = new McpServer({ name: 'bifrost-protocol', version: '1.0.0' })
 
 // Heartbeat monitor — check every 60s
 setInterval(() => checkHeartbeats(db, { thresholdSeconds: 180, maxMissed: 3 }), 60_000)

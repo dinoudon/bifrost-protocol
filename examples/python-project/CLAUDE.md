@@ -16,7 +16,7 @@ Follow these steps on every spawn:
 8. Call `shutdown` with completed/incomplete task lists when done
 
 ## MCP Server
-Server name: `custom-protocol-mcp`
+Server name: `bifrost-protocol`
 State lives in `TEAM_STATE.db` in this project root — never read/write it directly.
 
 ## Shortcodes (this project)
