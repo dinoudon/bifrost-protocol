@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
-    "test": "vitest run"
+    "test": "vitest run --dir src"
   },
   "keywords": [],
   "author": "",
