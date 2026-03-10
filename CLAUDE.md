@@ -12,7 +12,7 @@ You are part of a multi-agent Claude Code team. Follow these steps on every spaw
 8. Call `shutdown` with completed/incomplete task lists when done
 
 ## MCP Server
-Server name: `custom-protocol-mcp`
+Server name: `bifrost-protocol`
 All state lives in `TEAM_STATE.db` — never read/write it directly. Always use MCP tools.
 
 ## Protocol Reference
