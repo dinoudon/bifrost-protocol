@@ -52,6 +52,12 @@ export function initDb(path: string = 'TEAM_STATE.db') {
       payload TEXT NOT NULL,
       timestamp INTEGER NOT NULL DEFAULT (unixepoch())
     );
+
+    -- Performance indexes
+    CREATE INDEX IF NOT EXISTS idx_tasks_status_priority ON tasks(status, priority);
+    CREATE INDEX IF NOT EXISTS idx_agents_status_heartbeat ON agents(status, last_heartbeat);
+    CREATE INDEX IF NOT EXISTS idx_tasks_owner_status ON tasks(owner, status);
+    CREATE INDEX IF NOT EXISTS idx_locks_owner_agent ON locks(owner_agent);
   `)
 
   return db
