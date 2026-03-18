@@ -14,11 +14,25 @@ export function addTask(db: Database, task: TaskPayload) {
 }
 
 export function availableTasks(db: Database, agentSkills: string[]) {
-  const all = db.prepare("SELECT * FROM tasks WHERE status='unassigned' ORDER BY priority ASC").all() as any[]
-  return all.filter(t => {
-    const required: string[] = JSON.parse(t.skills)
-    return required.length === 0 || required.some(s => agentSkills.includes(s))
-  })
+  // BOLT ⚡ OPTIMIZATION:
+  // Offload collection filtering from JavaScript to SQLite using JSON functions.
+  // This reduces the number of rows transferred to JS and leverages the database's optimized JSON processing.
+  // The query filters tasks where:
+  // 1. The task has no required skills (json_array_length(skills) = 0).
+  // 2. The task's required skills have at least one match in the agent's skills (via json_each and EXISTS).
+  const query = `
+    SELECT * FROM tasks
+    WHERE status = 'unassigned'
+    AND (
+      json_array_length(skills) = 0
+      OR EXISTS (
+        SELECT 1 FROM json_each(tasks.skills)
+        WHERE value IN (SELECT value FROM json_each(?))
+      )
+    )
+    ORDER BY priority ASC
+  `;
+  return db.prepare(query).all(JSON.stringify(agentSkills)) as any[];
 }
 
 export function claimTask(db: Database, taskId: string, agentId: string): { success: boolean } {
