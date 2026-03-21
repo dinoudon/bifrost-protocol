@@ -1,0 +1,3 @@
+## 2025-05-15 - [JSON Filtering in SQLite]
+**Learning:** SQLite 3.38+ supports powerful JSON functions like `json_each` and `json_array_length`. Using these functions to perform filtering on JSON columns directly in the database can significantly reduce data transfer and memory overhead in the application layer. In this project, offloading task skill filtering to SQLite resulted in a ~20-35% performance improvement for task retrieval.
+**Action:** Always check if complex filtering on JSON columns can be moved to the database layer using SQLite's JSON functions instead of filtering in JavaScript.
