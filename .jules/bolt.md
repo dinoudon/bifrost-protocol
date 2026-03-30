@@ -5,6 +5,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## 2025-02-14 - Database Performance in Bifrost
 **Learning:** The initial schema in `db.ts` lacked indexes for frequent queries on `status`, `priority`, and `last_heartbeat`. `availableTasks` also performed in-memory filtering of all unassigned tasks, which scaled poorly as the task backlog grew. Moving skill filtering to SQL using `json_each` significantly improves performance.
 **Action:** Added targeted indexes to `tasks`, `agents`, and `locks` tables. Optimized `availableTasks` to use SQL-level filtering with JSON functions.
@@ -97,3 +98,12 @@
 ## 2025-05-22 - Optimizing Task Retrieval in SQLite (PR #13)
 **Learning:** Retrieving all unassigned tasks and filtering them in JavaScript is a bottleneck (O(N) data transfer and processing) when the task list grows. SQLite 3.38+ supports JSON functions that allow offloading this filtering to the database layer. Additionally, missing indexes on status and priority columns lead to full table scans.
 **Action:** Use `json_each` and `json_array_length` to filter JSON skill arrays in SQL. Implement composite indexes for common query patterns like `status` and `priority`.
+=======
+## 2026-03-29 - Optimize availableTasks with SQLite JSON filtering
+**Learning:** SQLite's json_each and json_array_length are significantly more efficient than filtering JSON columns in JavaScript after fetching. Using EXISTS with json_each allows for clean and fast intersection checks directly in the database.
+**Action:** Always consider offloading JSON array filtering to SQLite using json_each and indexes when performance is a concern.
+>>>>>>> origin/bolt-optimize-available-tasks-v1669814400000-f623a184-1901824140380197672
+
+## 2026-03-29 - Optimize availableTasks with SQLite JSON filtering (PR #14)
+**Learning:** SQLite's json_each and json_array_length are significantly more efficient than filtering JSON columns in JavaScript after fetching. Using EXISTS with json_each allows for clean and fast intersection checks directly in the database.
+**Action:** Always consider offloading JSON array filtering to SQLite using json_each and indexes when performance is a concern.
