@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## 2025-02-14 - Database Performance in Bifrost
 **Learning:** The initial schema in `db.ts` lacked indexes for frequent queries on `status`, `priority`, and `last_heartbeat`. `availableTasks` also performed in-memory filtering of all unassigned tasks, which scaled poorly as the task backlog grew. Moving skill filtering to SQL using `json_each` significantly improves performance.
 **Action:** Added targeted indexes to `tasks`, `agents`, and `locks` tables. Optimized `availableTasks` to use SQL-level filtering with JSON functions.
@@ -27,3 +28,12 @@
 ## 2025-05-15 - SQLite JSON filtering optimization (PR #7)
 **Learning:** Fetching all rows from a SQLite table to filter JSON array columns in JavaScript is a significant performance bottleneck as the dataset grows. Using SQLite's built-in `json_each` and `json_array_length` functions to perform filtering at the database layer reduces data transfer and leverages SQLite's optimized C implementation. In this codebase, offloading task skill matching to SQL resulted in a ~55% performance improvement for task retrieval with 5000 records.
 **Action:** Always prefer database-level filtering for JSON columns using `json_each` or `json_extract` instead of manual filtering in Node.js when using `better-sqlite3`.
+=======
+## 2025-05-14 - SQLite JSON filtering optimization
+**Learning:** Offloading JSON array filtering to SQLite using `json_each` and `EXISTS` provides a ~60% performance boost compared to in-memory JavaScript filtering (from ~31ms to ~11ms for 10,000 tasks). This reduces both CPU usage in the main thread and memory overhead from transferring unneeded records.
+**Action:** Always prefer database-level JSON operations (`json_each`, `json_array_length`, `json_extract`) for filtering or aggregating data stored in SQLite JSON columns.
+>>>>>>> origin/bolt-optimize-available-tasks-sqlite-json-filtering-20250514-061343-261486-8200248643781046706
+
+## 2025-05-14 - SQLite JSON filtering optimization (PR #8)
+**Learning:** Offloading JSON array filtering to SQLite using `json_each` and `EXISTS` provides a ~60% performance boost compared to in-memory JavaScript filtering (from ~31ms to ~11ms for 10,000 tasks). This reduces both CPU usage in the main thread and memory overhead from transferring unneeded records.
+**Action:** Always prefer database-level JSON operations (`json_each`, `json_array_length`, `json_extract`) for filtering or aggregating data stored in SQLite JSON columns.
