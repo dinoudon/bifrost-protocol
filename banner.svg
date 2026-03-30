@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 440" width="1200" height="440">
+  <defs>
+    <!-- Glow filters -->
+    <filter id="g0" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="g1" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="7" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="g2" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="18" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="g3" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur stdDeviation="40" result="b"/>
+      <feMergeNode in="b"/>
+    </filter>
+    <filter id="txt" x="-5%" y="-20%" width="110%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Background -->
+    <radialGradient id="bg" cx="50%" cy="38%" r="70%">
+      <stop offset="0%"   stop-color="#100820"/>
+      <stop offset="60%"  stop-color="#060412"/>
+      <stop offset="100%" stop-color="#020208"/>
+    </radialGradient>
+
+    <!-- Ambient horizon glow -->
+    <radialGradient id="amb" cx="50%" cy="100%" r="55%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#5b21b6" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#5b21b6" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Bridge chromatic gradient -->
+    <linearGradient id="br" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#06b6d4"/>
+      <stop offset="22%"  stop-color="#6366f1"/>
+      <stop offset="45%"  stop-color="#a855f7"/>
+      <stop offset="68%"  stop-color="#ec4899"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+
+    <!-- Node gradients -->
+    <radialGradient id="nc" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#67e8f9"/>
+      <stop offset="55%"  stop-color="#0e7490" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#083344" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="np" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#c4b5fd"/>
+      <stop offset="55%"  stop-color="#5b21b6" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#2e1065" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="na" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#fde68a"/>
+      <stop offset="55%"  stop-color="#b45309" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#451a03" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nm" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#f0abfc"/>
+      <stop offset="55%"  stop-color="#86198f" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#4a044e" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Title gradient -->
+    <linearGradient id="tg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#e0e7ff"/>
+      <stop offset="50%"  stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#c4b5fd"/>
+    </linearGradient>
+
+    <!-- Separator gradient -->
+    <linearGradient id="sep" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#06b6d4" stop-opacity="0"/>
+      <stop offset="20%"  stop-color="#6366f1" stop-opacity="0.8"/>
+      <stop offset="50%"  stop-color="#a855f7" stop-opacity="1"/>
+      <stop offset="80%"  stop-color="#ec4899" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="fade-l" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#06b6d4" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="fade-r" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#f59e0b" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ── BACKGROUND ─────────────────────────────────────── -->
+  <rect width="1200" height="440" fill="url(#bg)"/>
+  <rect width="1200" height="440" fill="url(#amb)"/>
+
+  <!-- ── STAR FIELD ─────────────────────────────────────── -->
+  <!-- white stars -->
+  <circle cx="42"  cy="22"  r="0.9" fill="#fff" opacity="0.65"/>
+  <circle cx="89"  cy="48"  r="0.5" fill="#fff" opacity="0.40"/>
+  <circle cx="121" cy="14"  r="1.0" fill="#fff" opacity="0.70"/>
+  <circle cx="168" cy="60"  r="0.6" fill="#fff" opacity="0.35"/>
+  <circle cx="210" cy="31"  r="0.8" fill="#fff" opacity="0.55"/>
+  <circle cx="258" cy="10"  r="0.5" fill="#fff" opacity="0.60"/>
+  <circle cx="295" cy="44"  r="0.7" fill="#fff" opacity="0.45"/>
+  <circle cx="342" cy="19"  r="0.9" fill="#fff" opacity="0.50"/>
+  <circle cx="388" cy="55"  r="0.5" fill="#fff" opacity="0.38"/>
+  <circle cx="430" cy="26"  r="0.6" fill="#fff" opacity="0.52"/>
+  <circle cx="475" cy="12"  r="0.8" fill="#fff" opacity="0.62"/>
+  <circle cx="518" cy="41"  r="0.5" fill="#fff" opacity="0.32"/>
+  <circle cx="563" cy="22"  r="0.7" fill="#fff" opacity="0.55"/>
+  <circle cx="608" cy="50"  r="0.5" fill="#fff" opacity="0.28"/>
+  <circle cx="650" cy="16"  r="0.9" fill="#fff" opacity="0.60"/>
+  <circle cx="695" cy="38"  r="0.6" fill="#fff" opacity="0.42"/>
+  <circle cx="741" cy="57"  r="0.8" fill="#fff" opacity="0.50"/>
+  <circle cx="785" cy="20"  r="0.5" fill="#fff" opacity="0.38"/>
+  <circle cx="829" cy="45"  r="0.7" fill="#fff" opacity="0.58"/>
+  <circle cx="874" cy="28"  r="0.8" fill="#fff" opacity="0.48"/>
+  <circle cx="918" cy="13"  r="0.6" fill="#fff" opacity="0.55"/>
+  <circle cx="960" cy="49"  r="0.9" fill="#fff" opacity="0.42"/>
+  <circle cx="1005" cy="26" r="0.5" fill="#fff" opacity="0.65"/>
+  <circle cx="1048" cy="62" r="0.7" fill="#fff" opacity="0.38"/>
+  <circle cx="1092" cy="16" r="0.8" fill="#fff" opacity="0.52"/>
+  <circle cx="1137" cy="40" r="0.5" fill="#fff" opacity="0.45"/>
+  <circle cx="1181" cy="24" r="0.6" fill="#fff" opacity="0.60"/>
+  <!-- tinted stars -->
+  <circle cx="138" cy="88"  r="0.6" fill="#c4b5fd" opacity="0.50"/>
+  <circle cx="198" cy="108" r="0.7" fill="#67e8f9" opacity="0.42"/>
+  <circle cx="392" cy="82"  r="0.5" fill="#fde68a" opacity="0.38"/>
+  <circle cx="500" cy="92"  r="0.6" fill="#c4b5fd" opacity="0.42"/>
+  <circle cx="715" cy="78"  r="0.7" fill="#67e8f9" opacity="0.35"/>
+  <circle cx="828" cy="92"  r="0.5" fill="#fde68a" opacity="0.40"/>
+  <circle cx="955" cy="72"  r="0.6" fill="#c4b5fd" opacity="0.45"/>
+  <circle cx="1068" cy="88" r="0.5" fill="#67e8f9" opacity="0.35"/>
+  <circle cx="72"  cy="102" r="0.4" fill="#f9a8d4" opacity="0.30"/>
+  <circle cx="1145" cy="72" r="0.5" fill="#fde68a" opacity="0.35"/>
+
+  <!-- ── PERSPECTIVE FLOOR GRID ──────────────────────────── -->
+  <line x1="0"    y1="390" x2="1200" y2="390" stroke="#1e0f40" stroke-width="0.6" opacity="0.7"/>
+  <line x1="0"    y1="405" x2="1200" y2="405" stroke="#1e0f40" stroke-width="0.5" opacity="0.5"/>
+  <line x1="0"    y1="420" x2="1200" y2="420" stroke="#1e0f40" stroke-width="0.4" opacity="0.35"/>
+  <line x1="0"    y1="432" x2="1200" y2="432" stroke="#1e0f40" stroke-width="0.3" opacity="0.22"/>
+  <!-- vanishing lines -->
+  <line x1="600" y1="440" x2="0"    y2="372" stroke="#1e0f40" stroke-width="0.4" opacity="0.55"/>
+  <line x1="600" y1="440" x2="150"  y2="368" stroke="#1e0f40" stroke-width="0.4" opacity="0.42"/>
+  <line x1="600" y1="440" x2="350"  y2="363" stroke="#1e0f40" stroke-width="0.3" opacity="0.32"/>
+  <line x1="600" y1="440" x2="550"  y2="361" stroke="#1e0f40" stroke-width="0.3" opacity="0.22"/>
+  <line x1="600" y1="440" x2="650"  y2="361" stroke="#1e0f40" stroke-width="0.3" opacity="0.22"/>
+  <line x1="600" y1="440" x2="850"  y2="363" stroke="#1e0f40" stroke-width="0.3" opacity="0.32"/>
+  <line x1="600" y1="440" x2="1050" y2="368" stroke="#1e0f40" stroke-width="0.4" opacity="0.42"/>
+  <line x1="600" y1="440" x2="1200" y2="372" stroke="#1e0f40" stroke-width="0.4" opacity="0.55"/>
+
+  <!-- ── BRIDGE PILLARS ──────────────────────────────────── -->
+  <!-- Left pillar -->
+  <rect x="67"  y="340" width="8"  height="90" fill="#06b6d4" opacity="0.18"/>
+  <rect x="70"  y="340" width="2"  height="90" fill="#06b6d4" opacity="0.55" filter="url(#g0)"/>
+  <rect x="63"  y="333" width="20" height="9"  rx="1" fill="#0e7490" opacity="0.35"/>
+  <rect x="65"  y="331" width="16" height="5"  rx="1" fill="#67e8f9" opacity="0.75" filter="url(#g0)"/>
+  <circle cx="71" cy="331" r="3" fill="#67e8f9" opacity="0.9" filter="url(#g1)"/>
+  <!-- Right pillar -->
+  <rect x="1125" y="340" width="8"  height="90" fill="#f59e0b" opacity="0.18"/>
+  <rect x="1128" y="340" width="2"  height="90" fill="#f59e0b" opacity="0.55" filter="url(#g0)"/>
+  <rect x="1117" y="333" width="20" height="9"  rx="1" fill="#b45309" opacity="0.35"/>
+  <rect x="1119" y="331" width="16" height="5"  rx="1" fill="#fde68a" opacity="0.75" filter="url(#g0)"/>
+  <circle cx="1129" cy="331" r="3" fill="#fde68a" opacity="0.9" filter="url(#g1)"/>
+
+  <!-- ── BRIDGE ARC — bloom stack ──────────────────────────
+       Bezier: M 71 355  Q 600 165  1129 355
+       Peak at t=0.5: y = 0.25*355 + 0.5*165 + 0.25*355 = 88.75+82.5+88.75 = 260
+  ────────────────────────────────────────────────────────── -->
+  <!-- outermost bloom -->
+  <path d="M 71 355 Q 600 165 1129 355" stroke="url(#br)" stroke-width="80"  fill="none" opacity="0.025" filter="url(#g3)"/>
+  <path d="M 71 355 Q 600 165 1129 355" stroke="url(#br)" stroke-width="48"  fill="none" opacity="0.05"/>
+  <path d="M 71 355 Q 600 165 1129 355" stroke="url(#br)" stroke-width="28"  fill="none" opacity="0.09"/>
+  <path d="M 71 355 Q 600 165 1129 355" stroke="url(#br)" stroke-width="16"  fill="none" opacity="0.16"/>
+  <path d="M 71 355 Q 600 165 1129 355" stroke="url(#br)" stroke-width="8"   fill="none" opacity="0.28"/>
+  <path d="M 71 355 Q 600 165 1129 355" stroke="url(#br)" stroke-width="4"   fill="none" opacity="0.55"/>
+  <!-- core line -->
+  <path d="M 71 355 Q 600 165 1129 355" stroke="url(#br)" stroke-width="1.8" fill="none" opacity="1.0"/>
+  <!-- specular shimmer -->
+  <path d="M 71 355 Q 600 165 1129 355" stroke="white"    stroke-width="0.8" fill="none" opacity="0.18"/>
+
+  <!-- ── AGENT NODES along arc ───────────────────────────────
+       t=0.18: x≈261, y≈304  (cyan)
+       t=0.35: x≈441, y≈278  (indigo)
+       t=0.50: x=600, y=260  (magenta — MCP)
+       t=0.65: x≈759, y≈278  (indigo)
+       t=0.82: x≈938, y≈304  (amber)
+  ────────────────────────────────────────────────────────── -->
+
+  <!-- Dashed connecting lines between nodes -->
+  <line x1="71"  y1="355" x2="261" y2="304" stroke="#06b6d4" stroke-width="0.6" opacity="0.25" stroke-dasharray="3,5"/>
+  <line x1="261" y1="304" x2="441" y2="278" stroke="#6366f1" stroke-width="0.6" opacity="0.25" stroke-dasharray="3,5"/>
+  <line x1="441" y1="278" x2="600" y2="260" stroke="#a855f7" stroke-width="0.6" opacity="0.25" stroke-dasharray="3,5"/>
+  <line x1="600" y1="260" x2="759" y2="278" stroke="#a855f7" stroke-width="0.6" opacity="0.25" stroke-dasharray="3,5"/>
+  <line x1="759" y1="278" x2="938" y2="304" stroke="#ec4899" stroke-width="0.6" opacity="0.25" stroke-dasharray="3,5"/>
+  <line x1="938" y1="304" x2="1129" y2="355" stroke="#f59e0b" stroke-width="0.6" opacity="0.25" stroke-dasharray="3,5"/>
+
+  <!-- NODE A1 — alpha — t=0.18 — CYAN -->
+  <circle cx="261" cy="304" r="30"  fill="url(#nc)" opacity="0.55"/>
+  <circle cx="261" cy="304" r="13"  fill="#0c2433" stroke="#06b6d4" stroke-width="1.5" opacity="0.92"/>
+  <circle cx="261" cy="304" r="5"   fill="#67e8f9"  opacity="0.9"  filter="url(#g1)"/>
+  <text x="261" y="308" text-anchor="middle"
+        font-family="'Courier New',Courier,monospace" font-size="6.5" font-weight="bold"
+        fill="#06b6d4" opacity="0.85" letter-spacing="0.3">A1</text>
+  <text x="261" y="344" text-anchor="middle"
+        font-family="'Courier New',Courier,monospace" font-size="8.5"
+        fill="#06b6d4" opacity="0.70" letter-spacing="1">alpha</text>
+
+  <!-- NODE A2 — beta — t=0.35 — INDIGO -->
+  <circle cx="441" cy="278" r="30"  fill="url(#np)" opacity="0.55"/>
+  <circle cx="441" cy="278" r="13"  fill="#1a0c3a" stroke="#6366f1" stroke-width="1.5" opacity="0.92"/>
+  <circle cx="441" cy="278" r="5"   fill="#a5b4fc"  opacity="0.9"  filter="url(#g1)"/>
+  <text x="441" y="282" text-anchor="middle"
+        font-family="'Courier New',Courier,monospace" font-size="6.5" font-weight="bold"
+        fill="#818cf8" opacity="0.85" letter-spacing="0.3">A2</text>
+  <text x="441" y="318" text-anchor="middle"
+        font-family="'Courier New',Courier,monospace" font-size="8.5"
+        fill="#818cf8" opacity="0.70" letter-spacing="1">beta</text>
+
+  <!-- NODE MCP — center — t=0.5 — MAGENTA (larger) -->
+  <circle cx="600" cy="260" r="38"  fill="url(#nm)" opacity="0.60"/>
+  <circle cx="600" cy="260" r="18"  fill="#1c0a2e" stroke="#c084fc" stroke-width="2"   opacity="0.95"/>
+  <circle cx="600" cy="260" r="7"   fill="#e879f9"  opacity="0.9"  filter="url(#g2)"/>
+  <text x="600" y="256" text-anchor="middle"
+        font-family="'Courier New',Courier,monospace" font-size="7" font-weight="bold"
+        fill="#e879f9" opacity="0.9" letter-spacing="0.5">MCP</text>
+  <text x="600" y="265" text-anchor="middle"
+        font-family="'Courier New',Courier,monospace" font-size="5.5"
+        fill="#c084fc" opacity="0.75" letter-spacing="0.3">STATE.db</text>
+  <text x="600" y="303" text-anchor="middle"
+        font-family="'Courier New',Courier,monospace" font-size="8.5"
+        fill="#c084fc" opacity="0.70" letter-spacing="1">delta</text>
+
+  <!-- NODE A4 — delta — t=0.65 — INDIGO -->
+  <circle cx="759" cy="278" r="30"  fill="url(#np)" opacity="0.55"/>
+  <circle cx="759" cy="278" r="13"  fill="#1a0c3a" stroke="#6366f1" stroke-width="1.5" opacity="0.92"/>
+  <circle cx="759" cy="278" r="5"   fill="#a5b4fc"  opacity="0.9"  filter="url(#g1)"/>
+  <text x="759" y="282" text-anchor="middle"
+        font-family="'Courier New',Courier,monospace" font-size="6.5" font-weight="bold"
+        fill="#818cf8" opacity="0.85" letter-spacing="0.3">A4</text>
+  <text x="759" y="318" text-anchor="middle"
+        font-family="'Courier New',Courier,monospace" font-size="8.5"
+        fill="#818cf8" opacity="0.70" letter-spacing="1">gamma</text>
+
+  <!-- NODE A5 — omega — t=0.82 — AMBER -->
+  <circle cx="938" cy="304" r="30"  fill="url(#na)" opacity="0.55"/>
+  <circle cx="938" cy="304" r="13"  fill="#2c1004" stroke="#f59e0b" stroke-width="1.5" opacity="0.92"/>
+  <circle cx="938" cy="304" r="5"   fill="#fde68a"  opacity="0.9"  filter="url(#g1)"/>
+  <text x="938" y="308" text-anchor="middle"
+        font-family="'Courier New',Courier,monospace" font-size="6.5" font-weight="bold"
+        fill="#f59e0b" opacity="0.85" letter-spacing="0.3">A5</text>
+  <text x="938" y="344" text-anchor="middle"
+        font-family="'Courier New',Courier,monospace" font-size="8.5"
+        fill="#f59e0b" opacity="0.70" letter-spacing="1">omega</text>
+
+  <!-- ── FLOATING TIER-1 PINGS ──────────────────────────── -->
+  <text x="148" y="362" font-family="'Courier New',Courier,monospace" font-size="8"
+        fill="#06b6d4" opacity="0.32" letter-spacing="0.4">alpha T1 AUTH +agent-reg</text>
+  <text x="332" y="345" font-family="'Courier New',Courier,monospace" font-size="8"
+        fill="#818cf8" opacity="0.32" letter-spacing="0.4">beta60 T3 DB ~schema</text>
+  <text x="658" y="332" font-family="'Courier New',Courier,monospace" font-size="8"
+        fill="#c084fc" opacity="0.32" letter-spacing="0.4">delta T5 -lock &gt;&gt;T8</text>
+  <text x="800" y="348" font-family="'Courier New',Courier,monospace" font-size="8"
+        fill="#f472b6" opacity="0.32" letter-spacing="0.4">!!ε P0 UI !crash @A2</text>
+  <text x="980" y="365" font-family="'Courier New',Courier,monospace" font-size="8"
+        fill="#fbbf24" opacity="0.32" letter-spacing="0.4">omega A5 T9,T11 done</text>
+
+  <!-- ── TITLE: BIFROST ─────────────────────────────────── -->
+  <!-- deep glow halo -->
+  <text x="600" y="148"
+        text-anchor="middle"
+        font-family="Georgia,'Times New Roman',Times,serif"
+        font-size="90" font-weight="bold" letter-spacing="18"
+        fill="#7c3aed" opacity="0.30" filter="url(#g3)">BIFROST</text>
+  <!-- soft inner glow -->
+  <text x="600" y="148"
+        text-anchor="middle"
+        font-family="Georgia,'Times New Roman',Times,serif"
+        font-size="90" font-weight="bold" letter-spacing="18"
+        fill="#a78bfa" opacity="0.20" filter="url(#txt)">BIFROST</text>
+  <!-- main face -->
+  <text x="600" y="148"
+        text-anchor="middle"
+        font-family="Georgia,'Times New Roman',Times,serif"
+        font-size="90" font-weight="bold" letter-spacing="18"
+        fill="url(#tg)" opacity="0.97">BIFROST</text>
+
+  <!-- ── SUBTITLE: PROTOCOL ─────────────────────────────── -->
+  <text x="600" y="178"
+        text-anchor="middle"
+        font-family="'Courier New',Courier,monospace"
+        font-size="14" letter-spacing="16"
+        fill="url(#br)" opacity="0.88">PROTOCOL</text>
+
+  <!-- ── SEPARATOR LINE ─────────────────────────────────── -->
+  <line x1="290" y1="196" x2="910" y2="196" stroke="url(#sep)" stroke-width="0.8" opacity="0.75"/>
+  <!-- small left/right caps -->
+  <line x1="290" y1="192" x2="290" y2="200" stroke="#06b6d4" stroke-width="1" opacity="0.50"/>
+  <line x1="910" y1="192" x2="910" y2="200" stroke="#f59e0b" stroke-width="1" opacity="0.50"/>
+
+  <!-- ── TAGLINE ──────────────────────────────────────────── -->
+  <text x="600" y="418"
+        text-anchor="middle"
+        font-family="Georgia,'Times New Roman',Times,serif"
+        font-size="12.5" letter-spacing="3.5"
+        fill="white" opacity="0.35">Multi-Agent Coordination for Claude Code Teams</text>
+
+  <!-- ── NORSE CORNER MARKS ─────────────────────────────── -->
+  <!-- Top-left rune -->
+  <path d="M 18 18 L 52 18 M 18 18 L 18 52" stroke="#6366f1" stroke-width="1.2" fill="none" opacity="0.40"/>
+  <path d="M 18 35 L 38 35 M 35 18 L 35 42" stroke="#6366f1" stroke-width="0.7" fill="none" opacity="0.28"/>
+  <!-- Top-right rune -->
+  <path d="M 1182 18 L 1148 18 M 1182 18 L 1182 52" stroke="#a855f7" stroke-width="1.2" fill="none" opacity="0.40"/>
+  <path d="M 1182 35 L 1162 35 M 1165 18 L 1165 42" stroke="#a855f7" stroke-width="0.7" fill="none" opacity="0.28"/>
+  <!-- Bottom-left rune -->
+  <path d="M 18 422 L 52 422 M 18 422 L 18 388" stroke="#06b6d4" stroke-width="1.2" fill="none" opacity="0.40"/>
+  <path d="M 18 405 L 38 405" stroke="#06b6d4" stroke-width="0.7" fill="none" opacity="0.28"/>
+  <!-- Bottom-right rune -->
+  <path d="M 1182 422 L 1148 422 M 1182 422 L 1182 388" stroke="#f59e0b" stroke-width="1.2" fill="none" opacity="0.40"/>
+  <path d="M 1182 405 L 1162 405" stroke="#f59e0b" stroke-width="0.7" fill="none" opacity="0.28"/>
+
+  <!-- ── OUTER BORDER ────────────────────────────────────── -->
+  <rect x="1.5" y="1.5" width="1197" height="437" rx="3"
+        fill="none" stroke="#2a1060" stroke-width="1.5" opacity="0.65"/>
+  <rect x="4"   y="4"   width="1192" height="432" rx="2"
+        fill="none" stroke="#130830" stroke-width="0.6" opacity="0.40"/>
+
+  <!-- left edge fade-in taper on bridge -->
+  <rect x="0" y="0" width="60" height="440"
+        fill="url(#fade-l)" opacity="0.08"/>
+  <rect x="1140" y="0" width="60" height="440"
+        fill="url(#fade-r)" opacity="0.08"/>
+</svg>
