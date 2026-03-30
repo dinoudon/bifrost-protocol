@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## 2025-02-14 - Database Performance in Bifrost
 **Learning:** The initial schema in `db.ts` lacked indexes for frequent queries on `status`, `priority`, and `last_heartbeat`. `availableTasks` also performed in-memory filtering of all unassigned tasks, which scaled poorly as the task backlog grew. Moving skill filtering to SQL using `json_each` significantly improves performance.
 **Action:** Added targeted indexes to `tasks`, `agents`, and `locks` tables. Optimized `availableTasks` to use SQL-level filtering with JSON functions.
@@ -87,3 +88,12 @@
 ## 2025-05-15 - Multi-column indexing for state-based queries (PR #12)
 **Learning:** Adding indexes on `(status, priority)` for tasks and `(status, last_heartbeat)` for agents provides immediate performance gains for the most frequent query patterns in a coordination system like Bifrost.
 **Action:** Add composite indexes on columns used in WHERE + ORDER BY clauses for frequently queried tables.
+=======
+## 2025-05-22 - Optimizing Task Retrieval in SQLite
+**Learning:** Retrieving all unassigned tasks and filtering them in JavaScript is a bottleneck (O(N) data transfer and processing) when the task list grows. SQLite 3.38+ supports JSON functions that allow offloading this filtering to the database layer. Additionally, missing indexes on status and priority columns lead to full table scans.
+**Action:** Use `json_each` and `json_array_length` to filter JSON skill arrays in SQL. Implement composite indexes for common query patterns like `status` and `priority`.
+>>>>>>> origin/bolt-optimize-task-retrieval-3065637299111616466
+
+## 2025-05-22 - Optimizing Task Retrieval in SQLite (PR #13)
+**Learning:** Retrieving all unassigned tasks and filtering them in JavaScript is a bottleneck (O(N) data transfer and processing) when the task list grows. SQLite 3.38+ supports JSON functions that allow offloading this filtering to the database layer. Additionally, missing indexes on status and priority columns lead to full table scans.
+**Action:** Use `json_each` and `json_array_length` to filter JSON skill arrays in SQL. Implement composite indexes for common query patterns like `status` and `priority`.
