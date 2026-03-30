@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## 2025-02-14 - Database Performance in Bifrost
 **Learning:** The initial schema in `db.ts` lacked indexes for frequent queries on `status`, `priority`, and `last_heartbeat`. `availableTasks` also performed in-memory filtering of all unassigned tasks, which scaled poorly as the task backlog grew. Moving skill filtering to SQL using `json_each` significantly improves performance.
 **Action:** Added targeted indexes to `tasks`, `agents`, and `locks` tables. Optimized `availableTasks` to use SQL-level filtering with JSON functions.
@@ -37,3 +38,12 @@
 ## 2025-05-14 - SQLite JSON filtering optimization (PR #8)
 **Learning:** Offloading JSON array filtering to SQLite using `json_each` and `EXISTS` provides a ~60% performance boost compared to in-memory JavaScript filtering (from ~31ms to ~11ms for 10,000 tasks). This reduces both CPU usage in the main thread and memory overhead from transferring unneeded records.
 **Action:** Always prefer database-level JSON operations (`json_each`, `json_array_length`, `json_extract`) for filtering or aggregating data stored in SQLite JSON columns.
+=======
+## 2025-05-15 - SQLite JSON filtering vs JS filtering
+**Learning:** Using SQLite's built-in JSON functions like `json_each` and `json_array_length` to filter data at the database layer is significantly faster (~35-45% in this case) than fetching all records and filtering them in JavaScript. This reduces both CPU time for JSON parsing and memory overhead from fetching unnecessary records.
+**Action:** Always prefer database-side filtering with JSON functions when working with `better-sqlite3` and SQLite 3.38+ for column-based JSON arrays.
+>>>>>>> origin/bolt-optimize-task-filtering-13396244736116197897
+
+## 2025-05-15 - SQLite JSON filtering vs JS filtering (PR #9)
+**Learning:** Using SQLite's built-in JSON functions like `json_each` and `json_array_length` to filter data at the database layer is significantly faster (~35-45% in this case) than fetching all records and filtering them in JavaScript. This reduces both CPU time for JSON parsing and memory overhead from fetching unnecessary records.
+**Action:** Always prefer database-side filtering with JSON functions when working with `better-sqlite3` and SQLite 3.38+ for column-based JSON arrays.
