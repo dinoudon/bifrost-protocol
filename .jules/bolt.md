@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## 2025-02-14 - Database Performance in Bifrost
 **Learning:** The initial schema in `db.ts` lacked indexes for frequent queries on `status`, `priority`, and `last_heartbeat`. `availableTasks` also performed in-memory filtering of all unassigned tasks, which scaled poorly as the task backlog grew. Moving skill filtering to SQL using `json_each` significantly improves performance.
 **Action:** Added targeted indexes to `tasks`, `agents`, and `locks` tables. Optimized `availableTasks` to use SQL-level filtering with JSON functions.
@@ -47,3 +48,12 @@
 ## 2025-05-15 - SQLite JSON filtering vs JS filtering (PR #9)
 **Learning:** Using SQLite's built-in JSON functions like `json_each` and `json_array_length` to filter data at the database layer is significantly faster (~35-45% in this case) than fetching all records and filtering them in JavaScript. This reduces both CPU time for JSON parsing and memory overhead from fetching unnecessary records.
 **Action:** Always prefer database-side filtering with JSON functions when working with `better-sqlite3` and SQLite 3.38+ for column-based JSON arrays.
+=======
+## 2025-05-15 - SQLite JSON Filtering vs JS Filtering
+**Learning:** Offloading JSON skill filtering from JavaScript to SQLite using `json_each` and `json_array_length` resulted in a ~20% performance improvement in `availableTasks` even with 10,000 tasks. While in-memory benchmarks showed slight overhead from adding indices (likely due to seeding/maintenance cost in memory), indices on `(status, priority)` are critical for production disk-based SQLite to prevent full table scans as the task list grows.
+**Action:** Always prefer SQL-level filtering for JSON columns when using `better-sqlite3`, as it reduces data transfer between SQLite and the Node.js main thread.
+>>>>>>> origin/bolt-optimize-task-retrieval-15699818811518261994
+
+## 2025-05-15 - SQLite JSON Filtering vs JS Filtering (PR #10)
+**Learning:** Offloading JSON skill filtering from JavaScript to SQLite using `json_each` and `json_array_length` resulted in a ~20% performance improvement in `availableTasks` even with 10,000 tasks. While in-memory benchmarks showed slight overhead from adding indices, indices on `(status, priority)` are critical for production disk-based SQLite to prevent full table scans as the task list grows.
+**Action:** Always prefer SQL-level filtering for JSON columns when using `better-sqlite3`, as it reduces data transfer between SQLite and the Node.js main thread.
