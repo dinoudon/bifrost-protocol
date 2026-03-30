@@ -1,0 +1,52 @@
+# ─── AI Tool Artifacts ────────────────────────────────────────────────────────
+
+# Jules / Bolt (Google)
+.jules/
+
+# Cursor AI
+.cursor/
+.cursorignore
+.cursorindexingignore
+
+# Aider
+.aider*
+.aider.chat.history.md
+.aider.input.history
+
+# GitHub Copilot / Codex
+.github/copilot-instructions.md
+
+# Windsurf / Codeium
+.windsurf/
+.codeium/
+
+# Superpowers / Claude Code generated specs & plans
+docs/superpowers/
+docs/plans/
+
+# Generic AI-generated output dirs
+.ai/
+.llm/
+ai-output/
+
+# ─── AI-Generated Benchmark Scripts ──────────────────────────────────────────
+# Benchmarks added by automated agents — not part of production code
+bifrost-protocol/benchmarks/
+
+# ─── Node / TypeScript (root level) ───────────────────────────────────────────
+node_modules/
+dist/
+*.tsbuildinfo
+
+# ─── OS / Editor Artifacts ────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# ─── Logs & Temp ──────────────────────────────────────────────────────────────
+*.log
+*.tmp
+benchmark.db
