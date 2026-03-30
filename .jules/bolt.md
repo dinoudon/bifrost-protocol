@@ -9,3 +9,7 @@
 ## 2025-05-22 - Initial Bolt Optimization in Bifrost Protocol
 **Learning:** SQLite 3.38+ supports powerful JSON filtering that can offload intensive JavaScript filtering back to the database.
 **Action:** Use `json_each` and `json_array_length` for skill-based filtering in `availableTasks` to reduce row fetching and manual filtering overhead.
+
+## 2025-05-15 - SQLite JSON filtering optimization (PR #5)
+**Learning:** SQLite 3.38+ supports JSON functions like `json_each` and `json_array_length`. Using these functions to filter data in the database layer instead of the application layer (JavaScript) significantly reduces data transfer and improves performance.
+**Action:** Always check if JSON data can be filtered using SQLite's built-in functions before pulling all records into memory.
