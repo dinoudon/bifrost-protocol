@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## 2025-02-14 - Database Performance in Bifrost
 **Learning:** The initial schema in `db.ts` lacked indexes for frequent queries on `status`, `priority`, and `last_heartbeat`. `availableTasks` also performed in-memory filtering of all unassigned tasks, which scaled poorly as the task backlog grew. Moving skill filtering to SQL using `json_each` significantly improves performance.
 **Action:** Added targeted indexes to `tasks`, `agents`, and `locks` tables. Optimized `availableTasks` to use SQL-level filtering with JSON functions.
@@ -67,3 +68,22 @@
 ## 2025-05-15 - SQLite JSON performance optimization (PR #11)
 **Learning:** Using `json_each` and `json_array_length` in SQLite to offload filtering from JavaScript to the database layer resulted in a ~50% performance improvement for task retrieval (from ~21.75ms to ~10.64ms for 10k tasks).
 **Action:** Always consider offloading complex filtering on JSON columns to the database layer when using `better-sqlite3`.
+=======
+## 2025-05-15 - SQLite JSON filtering optimization
+**Learning:** Moving complex filtering logic (like JSON array intersections) from JavaScript to the SQLite database layer using `json_each` and `json_array_length` can significantly reduce latency and memory overhead, especially when dealing with large datasets. In this case, it reduced `availableTasks` latency by ~20-50% depending on the number of unassigned tasks.
+
+**Action:** Always check if JSON data stored in SQLite can be filtered or processed using SQLite's native JSON functions before pulling all records into memory.
+
+## 2025-05-15 - Multi-column indexing for state-based queries
+**Learning:** Adding indexes on `(status, priority)` for tasks and `(status, last_heartbeat)` for agents provides immediate performance gains for the most frequent query patterns in a coordination system like Bifrost.
+
+**Action:** Identify the most frequent `WHERE` and `ORDER BY` clauses and ensure appropriate covering indexes are in place during schema initialization.
+>>>>>>> origin/bolt-sqlite-opt-6750013195375293513
+
+## 2025-05-15 - SQLite JSON filtering optimization (PR #12)
+**Learning:** Moving complex filtering logic (like JSON array intersections) from JavaScript to the SQLite database layer using `json_each` and `json_array_length` can significantly reduce latency and memory overhead. In this case, it reduced `availableTasks` latency by ~20-50% depending on the number of unassigned tasks.
+**Action:** Always check if JSON data stored in SQLite can be filtered or processed using SQLite's native JSON functions before pulling all records into memory.
+
+## 2025-05-15 - Multi-column indexing for state-based queries (PR #12)
+**Learning:** Adding indexes on `(status, priority)` for tasks and `(status, last_heartbeat)` for agents provides immediate performance gains for the most frequent query patterns in a coordination system like Bifrost.
+**Action:** Add composite indexes on columns used in WHERE + ORDER BY clauses for frequently queried tables.
