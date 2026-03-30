@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## 2025-02-14 - Database Performance in Bifrost
 **Learning:** The initial schema in `db.ts` lacked indexes for frequent queries on `status`, `priority`, and `last_heartbeat`. `availableTasks` also performed in-memory filtering of all unassigned tasks, which scaled poorly as the task backlog grew. Moving skill filtering to SQL using `json_each` significantly improves performance.
 **Action:** Added targeted indexes to `tasks`, `agents`, and `locks` tables. Optimized `availableTasks` to use SQL-level filtering with JSON functions.
@@ -57,3 +58,12 @@
 ## 2025-05-15 - SQLite JSON Filtering vs JS Filtering (PR #10)
 **Learning:** Offloading JSON skill filtering from JavaScript to SQLite using `json_each` and `json_array_length` resulted in a ~20% performance improvement in `availableTasks` even with 10,000 tasks. While in-memory benchmarks showed slight overhead from adding indices, indices on `(status, priority)` are critical for production disk-based SQLite to prevent full table scans as the task list grows.
 **Action:** Always prefer SQL-level filtering for JSON columns when using `better-sqlite3`, as it reduces data transfer between SQLite and the Node.js main thread.
+=======
+## 2025-05-15 - SQLite JSON performance optimization
+**Learning:** Using `json_each` and `json_array_length` in SQLite to offload filtering from JavaScript to the database layer resulted in a ~50% performance improvement for task retrieval (from ~21.75ms to ~10.64ms for 10k tasks).
+**Action:** Always consider offloading complex filtering on JSON columns to the database layer when using `better-sqlite3`.
+>>>>>>> origin/bolt-optimize-task-retrieval-9838418585780869144
+
+## 2025-05-15 - SQLite JSON performance optimization (PR #11)
+**Learning:** Using `json_each` and `json_array_length` in SQLite to offload filtering from JavaScript to the database layer resulted in a ~50% performance improvement for task retrieval (from ~21.75ms to ~10.64ms for 10k tasks).
+**Action:** Always consider offloading complex filtering on JSON columns to the database layer when using `better-sqlite3`.
