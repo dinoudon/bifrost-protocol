@@ -14,36 +14,23 @@ export function addTask(db: Database, task: TaskPayload) {
 }
 
 export function availableTasks(db: Database, agentSkills: string[]) {
-  // Use SQLite's json_each to filter tasks by skills directly in the database.
-  // This is significantly more efficient than fetching all unassigned tasks and filtering in JS.
-
-  if (agentSkills.length === 0) {
-    // If agent has no skills, only return tasks that require no skills.
-    return db.prepare(`
-      SELECT *
-      FROM tasks
-      WHERE status = 'unassigned'
-      AND json_array_length(skills) = 0
-      ORDER BY priority ASC
-    `).all() as any[]
-  }
-
-  const placeholders = agentSkills.map(() => '?').join(',')
-  const query = `
+  // Use SQLite's JSON support to filter tasks by skills directly in SQL.
+  // This is much faster than fetching all tasks and filtering in JavaScript,
+  // especially as the number of unassigned tasks grows.
+  // Passing skills as a JSON array avoids SQLite's variable-number limit.
+  return db.prepare(`
     SELECT t.*
     FROM tasks t
     WHERE t.status = 'unassigned'
     AND (
       json_array_length(t.skills) = 0
       OR EXISTS (
-        SELECT 1
-        FROM json_each(t.skills)
-        WHERE value IN (${placeholders})
+        SELECT 1 FROM json_each(t.skills)
+        WHERE value IN (SELECT value FROM json_each(?))
       )
     )
     ORDER BY t.priority ASC
-  `
-  return db.prepare(query).all(...agentSkills) as any[]
+  `).all(JSON.stringify(agentSkills)) as any[]
 }
 
 export function claimTask(db: Database, taskId: string, agentId: string): { success: boolean } {
