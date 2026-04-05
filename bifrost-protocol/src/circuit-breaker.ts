@@ -1,24 +1,51 @@
 import type { Database } from 'better-sqlite3'
-import { markDegraded } from './tools/agent.js'
 
 interface CBOptions { thresholdSeconds: number; maxMissed: number }
 
 export function checkHeartbeats(db: Database, opts: CBOptions): string[] {
   const cutoff = Math.floor(Date.now() / 1000) - opts.thresholdSeconds
-  const stale = db.prepare(
-    "SELECT id FROM agents WHERE status='active' AND last_heartbeat < ?"
-  ).all(cutoff) as { id: string }[]
 
-  const reroutedTasks: string[] = []
+  // Using a transaction and bulk SQL operations to optimize performance.
+  // This avoids N+1 query patterns by updating all stale agents and their tasks in one go.
+  const check = db.transaction(() => {
+    // 1. Identify stale agents and mark them degraded in bulk.
+    // We use RETURNING id to capture the affected agent IDs for subsequent steps.
+    const staleAgents = db.prepare(`
+      UPDATE agents
+      SET status = 'degraded'
+      WHERE status = 'active' AND last_heartbeat < ?
+      RETURNING id
+    `).all(cutoff) as { id: string }[]
 
-  for (const { id } of stale) {
-    markDegraded(db, id)
-    const orphaned = db.prepare(
-      "UPDATE tasks SET status='unassigned', owner=NULL WHERE owner=? AND status='in_progress' RETURNING id"
-    ).all(id) as { id: string }[]
-    reroutedTasks.push(...orphaned.map(t => t.id))
-    db.prepare("DELETE FROM locks WHERE owner_agent=?").run(id)
-  }
+    if (staleAgents.length === 0) return []
 
-  return reroutedTasks
+    const staleAgentIds = staleAgents.map(a => a.id)
+    const agentIdsJson = JSON.stringify(staleAgentIds)
+
+    // 2. Insert 'degraded' events for all affected agents in bulk.
+    db.prepare(`
+      INSERT INTO events (type, agent, payload)
+      SELECT 'degraded', value, ?
+      FROM json_each(?)
+    `).run(JSON.stringify({ reason: 'missed_heartbeats' }), agentIdsJson)
+
+    // 3. Reassign tasks from all stale agents in bulk.
+    // We use RETURNING id to get the list of rerouted tasks.
+    const reroutedTasks = db.prepare(`
+      UPDATE tasks
+      SET status = 'unassigned', owner = NULL
+      WHERE status = 'in_progress' AND owner IN (SELECT value FROM json_each(?))
+      RETURNING id
+    `).all(agentIdsJson) as { id: string }[]
+
+    // 4. Release locks held by stale agents in bulk.
+    db.prepare(`
+      DELETE FROM locks
+      WHERE owner_agent IN (SELECT value FROM json_each(?))
+    `).run(agentIdsJson)
+
+    return reroutedTasks.map(t => t.id)
+  })
+
+  return check()
 }
