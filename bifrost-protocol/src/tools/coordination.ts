@@ -1,24 +1,49 @@
-import type { Database } from 'better-sqlite3'
+import type { Database, Statement } from 'better-sqlite3'
+
+const statementCache = new Map<Database, Record<string, Statement>>()
+
+function getStatements(db: Database) {
+  let cached = statementCache.get(db)
+  if (!cached) {
+    cached = {
+      getLock: db.prepare('SELECT * FROM locks WHERE file=?'),
+      insertLock: db.prepare('INSERT INTO locks (file, owner_agent) VALUES (?, ?)'),
+      insertEvent: db.prepare("INSERT INTO events (type, agent, payload) VALUES (?, ?, ?)"),
+      deleteLock: db.prepare('DELETE FROM locks WHERE file=?'),
+      insertCheckpoint: db.prepare(`
+        INSERT INTO checkpoints (agent, task, status, context, artifacts)
+        VALUES (?, ?, ?, ?, ?)
+      `),
+      updateTaskOwner: db.prepare("UPDATE tasks SET owner=? WHERE id=?"),
+      updateTaskCompleted: db.prepare("UPDATE tasks SET status='completed', owner=NULL WHERE id=?"),
+      updateAgentOffline: db.prepare("UPDATE agents SET status='offline' WHERE id=?")
+    }
+    statementCache.set(db, cached)
+  }
+  return cached
+}
 
 export function acquireLock(db: Database, file: string, agentId: string): { success: boolean } {
+  const { getLock, insertLock, insertEvent } = getStatements(db)
+
   const acquire = db.transaction(() => {
-    const existing = db.prepare('SELECT * FROM locks WHERE file=?').get(file)
+    const existing = getLock.get(file)
     if (existing) return { success: false }
-    db.prepare('INSERT INTO locks (file, owner_agent) VALUES (?, ?)').run(file, agentId)
-    db.prepare("INSERT INTO events (type, agent, payload) VALUES ('lock_acquire', ?, ?)")
-      .run(agentId, JSON.stringify({ file }))
+    insertLock.run(file, agentId)
+    insertEvent.run('lock_acquire', agentId, JSON.stringify({ file }))
     return { success: true }
   })
   return acquire()
 }
 
 export function releaseLock(db: Database, file: string, agentId: string): { success: boolean } {
+  const { getLock, deleteLock, insertEvent } = getStatements(db)
+
   const release = db.transaction(() => {
-    const lock = db.prepare('SELECT * FROM locks WHERE file=?').get(file) as any
+    const lock = getLock.get(file) as any
     if (!lock || lock.owner_agent !== agentId) return { success: false }
-    db.prepare('DELETE FROM locks WHERE file=?').run(file)
-    db.prepare("INSERT INTO events (type, agent, payload) VALUES ('lock_release', ?, ?)")
-      .run(agentId, JSON.stringify({ file }))
+    deleteLock.run(file)
+    insertEvent.run('lock_release', agentId, JSON.stringify({ file }))
     return { success: true }
   })
   return release()
@@ -27,24 +52,30 @@ export function releaseLock(db: Database, file: string, agentId: string): { succ
 export function writeCheckpoint(db: Database, cp: {
   agent: string; task: string; status: string; context: string; artifacts: string[]
 }) {
-  db.prepare(`
-    INSERT INTO checkpoints (agent, task, status, context, artifacts)
-    VALUES (?, ?, ?, ?, ?)
-  `).run(cp.agent, cp.task, cp.status, cp.context, JSON.stringify(cp.artifacts))
+  getStatements(db).insertCheckpoint.run(cp.agent, cp.task, cp.status, cp.context, JSON.stringify(cp.artifacts))
 }
 
 export function writeHandoff(db: Database, payload: {
   from: string; to: string; task: string; summary: string
 }) {
-  db.prepare("INSERT INTO events (type, agent, payload) VALUES ('handoff', ?, ?)")
-    .run(payload.from, JSON.stringify(payload))
-  db.prepare("UPDATE tasks SET owner=? WHERE id=?").run(payload.to, payload.task)
+  const { insertEvent, updateTaskOwner } = getStatements(db)
+
+  db.transaction(() => {
+    insertEvent.run('handoff', payload.from, JSON.stringify(payload))
+    updateTaskOwner.run(payload.to, payload.task)
+  })()
 }
 
 export function writeShutdown(db: Database, payload: {
   agent: string; completed: string[]; incomplete: string[]; theta: string[]
 }) {
-  db.prepare("UPDATE agents SET status='offline' WHERE id=?").run(payload.agent)
-  db.prepare("INSERT INTO events (type, agent, payload) VALUES ('shutdown', ?, ?)")
-    .run(payload.agent, JSON.stringify(payload))
+  const { updateAgentOffline, insertEvent, updateTaskCompleted } = getStatements(db)
+
+  db.transaction(() => {
+    updateAgentOffline.run(payload.agent)
+    insertEvent.run('shutdown', payload.agent, JSON.stringify(payload))
+    for (const taskId of payload.completed) {
+      updateTaskCompleted.run(taskId)
+    }
+  })()
 }
