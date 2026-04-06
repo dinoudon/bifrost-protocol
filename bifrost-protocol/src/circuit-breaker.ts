@@ -1,24 +1,47 @@
 import type { Database } from 'better-sqlite3'
-import { markDegraded } from './tools/agent.js'
 
 interface CBOptions { thresholdSeconds: number; maxMissed: number }
 
 export function checkHeartbeats(db: Database, opts: CBOptions): string[] {
-  const cutoff = Math.floor(Date.now() / 1000) - opts.thresholdSeconds
-  const stale = db.prepare(
-    "SELECT id FROM agents WHERE status='active' AND last_heartbeat < ?"
-  ).all(cutoff) as { id: string }[]
+  // Use a single transaction and bulk SQL operations to avoid N+1 query patterns.
+  // This is significantly faster when multiple agents go stale simultaneously.
+  return db.transaction(() => {
+    const cutoff = Math.floor(Date.now() / 1000) - opts.thresholdSeconds
 
-  const reroutedTasks: string[] = []
+    // 1. Identify and mark agents as degraded in one step
+    const staleAgents = db.prepare(`
+      UPDATE agents
+      SET status = 'degraded'
+      WHERE status = 'active' AND last_heartbeat < ?
+      RETURNING id
+    `).all(cutoff) as { id: string }[]
 
-  for (const { id } of stale) {
-    markDegraded(db, id)
-    const orphaned = db.prepare(
-      "UPDATE tasks SET status='unassigned', owner=NULL WHERE owner=? AND status='in_progress' RETURNING id"
-    ).all(id) as { id: string }[]
-    reroutedTasks.push(...orphaned.map(t => t.id))
-    db.prepare("DELETE FROM locks WHERE owner_agent=?").run(id)
-  }
+    if (staleAgents.length === 0) return []
 
-  return reroutedTasks
+    // Convert IDs to a JSON array for efficient use in subsequent queries via json_each
+    const staleIdsJson = JSON.stringify(staleAgents.map(a => a.id))
+
+    // 2. Batch insert degradation events
+    db.prepare(`
+      INSERT INTO events (type, agent, payload)
+      SELECT 'degraded', value, ?
+      FROM json_each(?)
+    `).run(JSON.stringify({ reason: 'missed_heartbeats' }), staleIdsJson)
+
+    // 3. Reassign tasks and capture rerouted IDs in bulk
+    const rerouted = db.prepare(`
+      UPDATE tasks
+      SET status = 'unassigned', owner = NULL
+      WHERE status = 'in_progress' AND owner IN (SELECT value FROM json_each(?))
+      RETURNING id
+    `).all(staleIdsJson) as { id: string }[]
+
+    // 4. Release all locks held by stale agents
+    db.prepare(`
+      DELETE FROM locks
+      WHERE owner_agent IN (SELECT value FROM json_each(?))
+    `).run(staleIdsJson)
+
+    return rerouted.map(t => t.id)
+  })()
 }
